@@ -1,5 +1,6 @@
 import json
 import boto3
+from boto3.dynamodb.conditions import Key, Attr
 import logging
 import os
 import uuid
@@ -38,7 +39,9 @@ def lambda_handler(event, context):
 def write_to_db(data):
     dynamodb = boto3.resource('dynamodb')
     table = dynamodb.Table('happy_news__news_table')
-
-    table.put_item(
-        Item=data
-    )
+    response = table.query(KeyConditionExpression=Key('ID').eq(data['sentiment']),
+                           FilterExpression=Attr('title').eq(data['title']))
+    if response['Count'] == 0:
+        table.put_item(
+            Item=data
+        )

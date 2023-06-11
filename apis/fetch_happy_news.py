@@ -5,7 +5,7 @@ from boto3.dynamodb.conditions import Key, Attr
 def lambda_handler(event, context):
     dynamodb = boto3.resource('dynamodb')
     table = dynamodb.Table('happy_news__news_table')
-    response = table.query(KeyConditionExpression=Key('ID').eq('POSITIVE'), ScanIndexForward=False, Limit=2)
+    response = table.query(KeyConditionExpression=Key('ID').eq('POSITIVE'), ScanIndexForward=False, Limit=20)
     response['event']=event["queryStringParameters"]
     print(response)
     # TODO implement
